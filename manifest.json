@@ -1,0 +1,10 @@
+{
+  "manifest_version": 3,
+  "name": "BSC Testnet Gas Price",
+  "version": "1.0",
+  "description": "实时获取 BSC Testnet 网络的 Gas 价格。",
+  "permissions": ["activeTab"],
+  "action": {
+    "default_popup": "popup.html"
+  }
+}
