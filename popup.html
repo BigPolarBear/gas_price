@@ -2,26 +2,42 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>BSC Testnet Gas Price</title>
+    <title>Testnet Gas Price</title>
     <style>
       body {
         font-family: Arial, sans-serif;
-        min-width: 200px;
+        min-width: 250px;
         padding: 10px;
       }
       #gasPrice {
         font-size: 1.5em;
         color: #4caf50;
+        margin: 10px 0;
       }
       #lastUpdated {
         font-size: 0.8em;
         color: #888;
         margin-top: 5px;
       }
+      select {
+        width: 100%;
+        padding: 5px;
+        margin: 10px 0;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+      }
+      h2 {
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
-    <h2>BSC Testnet Gas Price</h2>
+    <h2>测试网 Gas 价格</h2>
+    <select id="network">
+      <option value="bsc_testnet">BSC Testnet</option>
+      <option value="amoy">Amoy Testnet</option>
+      <option value="sepolia">Sepolia Testnet</option>
+    </select>
     <div id="gasPrice">加载中...</div>
     <div id="lastUpdated"></div>
     <script src="popup.js"></script>
