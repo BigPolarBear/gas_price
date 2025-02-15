@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     sepolia: {
       name: "Sepolia Testnet",
-      rpcUrl: "https://rpc.sepolia.ethpandaops.io",
+      rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/demo",
     },
   };
 
@@ -39,6 +39,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const updateTimeElement = document.getElementById(`update-${networkId}`);
 
     try {
+      // 添加超时控制
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+
       const response = await fetch(network.rpcUrl, {
         method: "POST",
         headers: {
@@ -50,7 +54,14 @@ document.addEventListener("DOMContentLoaded", () => {
           params: [],
           id: 1,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
@@ -61,12 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const now = new Date();
         updateTimeElement.textContent = `更新于: ${now.toLocaleTimeString()}`;
       } else {
-        gasPriceElement.textContent = "无法获取";
-        updateTimeElement.textContent = "";
+        throw new Error("No result in response");
       }
     } catch (error) {
       console.error(`获取 ${network.name} Gas 价格时出错:`, error);
-      gasPriceElement.textContent = "出错";
+      if (error.name === "AbortError") {
+        gasPriceElement.textContent = "请求超时";
+      } else {
+        gasPriceElement.textContent = "无法获取";
+      }
       updateTimeElement.textContent = "";
     }
   }
@@ -75,7 +89,6 @@ document.addEventListener("DOMContentLoaded", () => {
    * 更新所有网络的 Gas 价格
    */
   function updateAllGasPrices() {
-    // 为每个网络单独发起请求，互不影响
     Object.keys(NETWORKS).forEach((networkId) => {
       getGasPrice(networkId);
     });
